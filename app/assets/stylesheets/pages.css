@@ -1,0 +1,16 @@
+ @font-face {
+    font-family: "Die Nasty";
+    src: url("/assets/die_nasty.otf");    
+}
+
+
+
+
+.homepage-projects p {
+    font-size: 2.25em;
+}
+
+.homepage-projects h4 {
+    font-family: "Die Nasty";
+    font-size: 2em;
+}

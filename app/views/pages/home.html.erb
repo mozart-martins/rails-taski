@@ -2,8 +2,8 @@
 
 <section>
 <% @projects.each do |project| %>
-<div>
-    <h4><%= project.title %></h4>
+<div class="homepage-projects">
+    <h4><%= "- #{project.title}" %></h4>
     <p><%= project.description %></p>
     <hr>
 </div>

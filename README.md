@@ -273,3 +273,116 @@ do Rails. Dentro do **error.html.erb** pode haver uma linha como:
 
 Para voltar, clique em **<%= link_to "homepage", root_path %>**, onde **home page**
 é o texto que será exibido em forma de link e **root_path** a rota root.
+
+
+## Criando links para rotas
+
+Em um erb, basta adicinar algo no formato **<%= link_to "texto_visivel", rota_path>**.
+Exemplos utilizando as rotas blog contact e blog.
+
+> <%= link_to "Contact", contact_path %>
+> <%= link_to "Blog", blog_path %>
+
+
+## Usando partials ou importanto arquivos html / erb (embedded ruby) em outro html / erb.
+
+Em primeiro lugar, um arquivo que será importando, que é chamado de partial, deve
+comecar o seu nome com _. Esse underscore é uma convenção.
+
+Por exemplo, criando o arquivo partial **_nav.html.erb** em **views/shared**, para
+importar em **application.html.erb** basta utilizar:
+
+> <%= render "shared/nav" %>
+
+
+## Comentando embedded ruby
+
+> <%#= 4 + 4 %>
+
+
+## Para imprimir tudo de um object
+
+> <%= nome_do_objeto.inspect %>
+
+
+## Interpolação de strings em arquivo erb (ruby embedded)
+
+> <%= "- #{project.title}" if project.title != nil %>
+
+ou
+
+> <%= "- #{project.title}" if project.title %>
+
+
+## Adicionando uma imagem em um erb
+
+> <%= image_tag("logos/Lays-Logo.png") %>
+
+Onde o arquivo png fica em **app/assets/logos/Lays-Logo.png**.
+É possível passar alguns parâmetros como o width:
+
+> <%= image_tag("logos/Lays-Logo.png", width: '150px') %>
+
+
+## Adicionando um arquivo css ao projeto
+
+Para adicionar um arquivo CSS ao projeto, basta adicionar um arquivo .css
+ao diretório **app/assets/arquivo.css** que ele será renderizado.
+
+## Utilizando fontes seguras (web safe fonts)
+
+Basta pesquisar no google por "web safe fonts" e adicionar na font-family
+do arquivo .css.
+
+Web safe fonts são fontes que funcionam em qualquer browser.
+
+
+## Utilizando fontes personalisadas / customizadas
+
+Um site legal para se buscar é o **dafont.com**. Basta fazer download da
+fonte e criar um diretórios fonts em assets, descomprimindo a fonte
+no diretório.
+
+Posteriormente, acessar o arquivo **config/initializers/assets.rb**  e adicionar
+as seguintes linhas dentro da class **Application**.
+
+> Rails.application.config.assets.paths << Rails.root.join('app', 'assets', 'fonts')
+
+Isso é necessário porque não é padrão do Rails buscar por fontes, então estamos
+adicionando aos **paths** o diretório. 
+
+Depois disto, no arquivo **.css**, deve-se importar a fonte:
+
+> @font-face {
+>   font-family: "die nasty";
+>   src: url("/assets/die nasty.otf")
+> }
+
+Posteriormente, para utiliza-la no mesmo arquivo css:
+
+> .homepage-projects h4 {
+>     font-family: "Die Nasty";
+>     font-size: 3em;
+> }
+
+Lembre-se de utilizar o nome da fonte no font-family.
+**REINICIE O SERVIDOR PARA CARREGAR A FONTE.**
+
+
+## Inserindo métodos e propriedades em todos os controllers simultaneamente
+
+Adicionando propriedades e métodos no arquivo application_controller.rb,
+todos os outros controllers terão acesso, haja vista todos os controllers
+herdarem desta classe.
+
+
+## Modificando os parâmetros que um controller recebe
+
+Um controller recebe apenas os parâmetros permitidos no método privado
+project_params.
+
+Então, quando se adicionar um novo campo em um model, deve-se adicioná-lo
+nesse método também.
+
+
+## 
