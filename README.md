@@ -385,4 +385,122 @@ Então, quando se adicionar um novo campo em um model, deve-se adicioná-lo
 nesse método também.
 
 
-## 
+## Criando um método de escopo personalizado (custom scope) no model
+
+Basta criar, dentro do model - ApplicationRecord, uma função no seguinte 
+formado - percent_complete é um campo:
+
+> scope :almost_completed, -> { where('percent_complete > 0.75') }
+
+Posteriormente, basta modificar um método do controller de:
+
+> def index
+>   @projects = Project.all
+> end
+
+Para:
+
+> def index
+>   @projects = Project.almost_complete
+> end
+
+Assim, serão exibidos somente os registros cujo campo percent_complete seja 
+maior que 75%.
+
+
+## Construindo um callback (trigger) no model
+
+Dentro de um model (ApplicationRecord), basta:
+
+> after_initialize :set_defaults
+
+> def set_defaults
+>   self.percent_complete ||= 0.0
+> end
+
+No entando, quando testei com o método create no console, **o callback não
+foi acionado**. Existem outros callbacks na documentação do Rails.
+
+
+## Integrando validações aos models
+
+Um exemplo de validação é a verificação da existência de conteúdo no campo tittle. 
+Dentro do models (ApplicationRecord).
+
+> validates_presence_of :title
+
+No entando, quando testei com o método create no console, **a validação não
+foi acionada**. Existem outras validações na documentação do Rails.
+
+
+## Criando um model via console e criando chaves extrangeiras
+
+> rails generate model Task title:string description:text project:references
+
+Esse comando cria o migrate e o model (ApplicationRecord), sendo project uma
+chave estrangeira. Esse comando irá criar um migration, uma classe, posteriormente,
+um schema como os a seguir:
+
+A classe model. Uma task vai ter uma chave extrangeira de project.
+
+> class Task < ApplicationRecord
+>   belongs_to :project
+> end
+
+Do outro lado, temos que um projeto pode ter várias tasks.
+
+> class Project < ApplicationRecord
+>     has_may :task
+> end
+
+
+## Adicionando um campo ao schema por meio de migrations no console
+
+> rails generate migration add_completed_to_tasks completed:boolean
+
+Esse comando cria a migration:
+
+> class AddCompletedToTasks < ActiveRecord::Migration[7.0]
+>   def change
+>     add_column :tasks, :completed, :boolean
+>   end
+> end
+
+Após add_column, o primeiro label é o schema, o segundo é o campo e o
+terceiro o tipo. Para aplicar, basta:
+
+> rake db:migrate
+
+Isso afetara o schema do task e, consequentemente o banco.
+
+
+## Criando uma trigger depois de salvar um registro
+
+> class Task < ApplicationRecord
+>   belongs_to :project
+>   after_save :update_percent_complete if :mark_completed? == true
+>   scope :completed, -> { where(completed: true) }
+>  def mark_completed?
+>    self.completed == true
+>  end
+>  def update_percent_complete
+>    project = Project.find(self.project_id)
+>    count_of_completed_task = project.task.completed.count
+>    count_of_total_task = project.task.count
+>    project.update!(percent_complete: Counter.calculate_percentege_complete(
+>      count_of_completed_task, count_of_total_task))
+>  end
+> end
+
+Observe a linha **after_save** que indica que se a propriedade completed do registro
+estiver marcada como true, o método **update_percent_complete** será chamada para
+atualizar outra tabela.
+
+Considere também que a classe Counter foi criada no diretório models e possui o
+método **calculate_percentage_complete**. Como se segue:
+
+> class Counter
+>     def self.calculate_percentege_complete(completed_task, total)
+>         return completed_task.to_f / total.to_f * 100
+>     end
+> end
