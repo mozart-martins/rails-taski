@@ -504,3 +504,55 @@ método **calculate_percentage_complete**. Como se segue:
 >         return completed_task.to_f / total.to_f * 100
 >     end
 > end
+
+
+## Adicionando coluna a um schema ou tabela do banco de dados
+
+> rails generate migration add_stage_to_projects stage:integer
+
+Adiciona a coluna stage, que é integer, ao schema/tabela projects por
+meio do migration gerado que se segue:
+
+> class AddCompletedToTasks < ActiveRecord::Migration[7.0]
+>   def change
+>     add_column :tasks, :completed, :boolean
+>   end
+> end
+
+
+## Modificando a coluna de um schema ou de uma tabela do banco de dados
+
+> rails generate migration change_data_type_for_stage
+
+Esse comando irá gerar uma migration quase vazia:
+
+> class ChangeDataTypeForStage < ActiveRecord::Migration[7.0]
+>   def change
+>   end
+> end
+
+Aqui é que serão feitas as modificações. Para modificar o campo, basta
+adicionar a linha **change_column :projects, :stage, :string**. Projects
+é a tabela, stage é o campo e string é o tipo. Dessa forma:
+
+> class ChangeDataTypeForStage < ActiveRecord::Migration[7.0]
+>   def change
+>       change_column :projects, :stage, :string
+>   end
+> end
+
+Depois, **rake db:migrate** para aplicar.
+
+
+## Removendo um campo ou coluna de um schema ou tabela de banco de dados
+
+> rails generate migration remove_division_from_projects division:string
+
+Caso que gera a seguinte migration:
+
+> class RemoveQualquerFromProjects < ActiveRecord::Migration[7.0]
+>   def change
+>     remove_column :projects, :division, :string
+>   end
+
+Dessa forma, o campo division, que é string, será removido.
