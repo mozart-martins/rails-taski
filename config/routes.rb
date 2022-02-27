@@ -4,11 +4,16 @@ Rails.application.routes.draw do
   get 'pages/home'
   get 'pages/teste'
   get "blog", to: redirect("http://www.google.com")
-  resources :projects
   get "error", to: "pages#error"
-  # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 
-  # Defines the root path route ("/")
+
+  resources :projects do
+    resources :tasks, except: [:index], controller: 'projects/tasks'
+  end
+
+  
+
+
   root "pages#home"
   get "*path", to: redirect("error")
 end

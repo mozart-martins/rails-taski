@@ -202,8 +202,13 @@ Essa é um busca utilizando o comando SQL LIKE.
 Esse comando gera um PagesController (controller) com as rotas e métodos 
 (no controller) contact, about e home.
 
+> rails generate controller tasks show new edit
 
-## Criando uma rota personalizada
+Esse comando irá gerar o controller com os métodos show, new e edit, bem como
+os arquivos embedded ruby.
+
+
+## Criando uma rota (routes) personalizada
 
 Uma rota padrão tem o seguinte formado: **get 'pages/contact'**. Ela vai direcionar
 para o arquivo app/views/pages/contact.html.erb. 
@@ -213,6 +218,28 @@ formato: **get "contact", to: "pages#contact"**. Isso significa que quando for d
 o url do contact no browser, essa requisição deverá ser direcionado para o pages 
 controller no seu método contact, que, por padrão, vai procurar o 
 **app/views/pages/contact.html.erb**.
+
+> resources :task, except: [:index]
+
+Neste caso, todos os métodos padrão deverão estar no controller, menos o index.
+
+
+## Criando uma rota aninhada (nested routes)
+### **TO-DO**
+
+**PESQUISAR NA INTERNET**
+
+Uma rota aninhada, no contexto deste projeto, seria acessar algo como 
+**projects/1/tasks/5**. Nesta caso, teremos que inserir o seguinte trecho no
+controller do project.
+
+>  resources :projects do
+>    resources :tasks, except: [:index], controller: 'projects/tasks'
+>  end
+
+Depois, deve-se criar um diretório projects no diretório de controllers e mover
+o controller das tasks para dentro. Também, deve-se mover o diretório de views
+das tasks para dentro do de projects.
 
 
 ## Passando parâmetros para uma view
@@ -282,6 +309,10 @@ Exemplos utilizando as rotas blog contact e blog.
 
 > <%= link_to "Contact", contact_path %>
 > <%= link_to "Blog", blog_path %>
+
+Para passar parâmetros, basta fazer o seguinte.
+
+> <%= link_to "Projeto", project_path(project_id: 10) %>
 
 
 ## Usando partials ou importanto arquivos html / erb (embedded ruby) em outro html / erb.
@@ -556,3 +587,19 @@ Caso que gera a seguinte migration:
 >   end
 
 Dessa forma, o campo division, que é string, será removido.
+
+
+## Para adicionar uma gem ou gema ao projeto
+
+Basta adicionar a linha no Gemfile e, em seguida, digitar:
+
+> bundle install
+
+
+## Para realizar o debug da aplicação utilizando logs
+
+Basta, normalmente, no model, colocar o puts.
+
+> puts "-" * 100
+> puts "Mensagem que eu queria"
+> puts "-" * 100
