@@ -603,3 +603,14 @@ Basta, normalmente, no model, colocar o puts.
 > puts "-" * 100
 > puts "Mensagem que eu queria"
 > puts "-" * 100
+  
+
+## Gems importantes
+
+### Figaro
+  
+Serve para esconder variáveis de ambiente.
+  
+### Devise
+  
+Serve para realizar autenticação de usuários.
